@@ -1,0 +1,46 @@
+---
+import "../../scripts/polyfills";
+import {AppClient} from "../components/react/app-client";
+import {ServerContainer} from "@react-navigation/native";
+import App from "../components/react/app-root";
+
+const {isIos} = Astro.locals;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+    <title>Castro</title>
+    <style is:global>
+        /* https://necolas.github.io/react-native-web/docs/setup/ */
+        /* These styles make the body full-height */
+        html, body {
+            height: 100%;
+        }
+
+        /* These styles disable body scrolling if you are using <ScrollView> */
+        body {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body
+        class="min-h-screen flex flex-col w-full z-0 bg-cover"
+        style="background-image: url('/background.png')"
+>
+<span class={'fixed inset-0 bg-slate-900 opacity-50'}/>
+<aside></aside>
+<main>
+    <App
+            client:load
+            theme={isIos}
+            dark
+            safeAreas
+            className={'max-w-lg min-h-screen w-screen bg-transparent z-50 flex flex-col flex-1 mx-auto'}
+    />
+</main>
+</body>
+</html>

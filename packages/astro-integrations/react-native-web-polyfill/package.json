@@ -1,0 +1,50 @@
+{
+  "name": "@castro/react-native-web-polyfill",
+  "version": "0.0.1",
+  "sideEffects": false,
+  "source": "src/index.mts",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "keywords": [
+    "astro-integration",
+    "react"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+
+  },
+  "peerDependencies": {
+    "astro": "*",
+    "react": "*"
+  },
+  "devDependencies": {
+    "react": "*",
+    "astro": "*",
+    "vite": "latest",
+    "vitest": "*"
+  },
+  "engines": {
+    "node": ">=18.14.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

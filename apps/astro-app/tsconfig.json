@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "types": [
+      "astro/client"
+    ],
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "baseUrl": "./",
+    "paths": {
+      "@/components/react/*": ["src/components/react/*"],
+      "@/components/react": ["src/components/react/index.ts"],
+      "@/components/svelte/*": ["src/components/svelte/*"],
+      "@/components/svelte": ["src/components/svelte/index.ts"]
+
+    },
+    "allowSyntheticDefaultImports": true
+  }
+}
