@@ -7,11 +7,11 @@ import partytown from "@astrojs/partytown";
 import sitemap from "@astrojs/sitemap";
 import prefetch from "@astrojs/prefetch";
 import compress from "astro-compress";
+import type {ManifestOptions} from "vite-plugin-pwa"
 import {VitePWA} from "vite-plugin-pwa";
 import babelPlugin from "vite-plugin-babel";
+import {babel} from "@rollup/plugin-babel";
 import reactNavigationPolyfill from "@castro/react-navigation-polyfill";
-
-import type { ManifestOptions } from "vite-plugin-pwa"
 
 const development = process.env.NODE_ENV === "development";
 const modeAsString = JSON.stringify(development);
@@ -30,6 +30,11 @@ const extensions = [
     ".json",
     ".mjs"
 ];
+
+const babelTransformAssetsConfig = {
+    extensions: ["png"],
+    name: "[name].[ext]?[sha512:hash:base64:7]"
+};
 
 const manifest: Partial<ManifestOptions> = {
     name: "Castro",
@@ -59,7 +64,7 @@ const manifest: Partial<ManifestOptions> = {
     //         purpose: "any maskable"
     //     }
     // ]
-}
+};
 
 export default defineConfig({
     output: 'server',
@@ -112,10 +117,7 @@ export default defineConfig({
             // @react-navigation/elements
             babelPlugin({
                 babelConfig: {
-                    plugins: [["transform-assets", {
-                        extensions: ["png"],
-                        name: "[name].[ext]?[sha512:hash:base64:7]"
-                    }]]
+                    plugins: [["transform-assets", babelTransformAssetsConfig]]
                 }
             })
         ],
@@ -130,6 +132,18 @@ export default defineConfig({
                 "global.window.REACT_NAVIGATION_DEVTOOLS": {},
             }),
             "global.window.__DEV__": modeAsString
+        },
+        build: {
+            rollupOptions: {
+                plugins: [
+                    // Vite uses esbuild for dev and rollup for prod builds. Therefore, we need to also include a babel
+                    // plugin wih the transform assets plugin in rollup's config, otherwise the build will succeed but
+                    // silently fail when invoked as Node can't parse a base64 image.
+                    babel({
+                        plugins: [["transform-assets", babelTransformAssetsConfig]]
+                    })
+                ]
+            }
         },
         optimizeDeps: {
             esbuildOptions: {
