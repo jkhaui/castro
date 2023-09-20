@@ -8,6 +8,7 @@ import sitemap from "@astrojs/sitemap";
 import prefetch from "@astrojs/prefetch";
 import compress from "astro-compress";
 import {VitePWA} from "vite-plugin-pwa";
+import babelPlugin from "vite-plugin-babel";
 import reactNavigationPolyfill from "@castro/react-navigation-polyfill";
 
 import type { ManifestOptions } from "vite-plugin-pwa"
@@ -64,7 +65,7 @@ export default defineConfig({
     output: 'server',
     adapter: vercel({
         edgeMiddleware: true,
-        functionPerRoute: false,
+        functionPerRoute: true,
         webAnalytics: {
             enabled: true
         },
@@ -104,15 +105,19 @@ export default defineConfig({
                     // This removes an errant console.log message from showing up.
                     navigateFallback: null
                 }
+            }),
+            // We were so close to completely avoiding direct babel transpilation :(
+            // But this one plugin is still needed in 2023 otherwise Node chokes
+            // trying to SSR an image required by the transitive dependency
+            // @react-navigation/elements
+            babelPlugin({
+                babelConfig: {
+                    plugins: [["transform-assets", {
+                        extensions: ["png"],
+                        name: "[name].[ext]?[sha512:hash:base64:7]"
+                    }]]
+                }
             })
-            // babelPlugin({
-            //     babelConfig: {
-            //         // plugins: ["@babel/plugin-transform-private-methods"],
-            //         presets: [["babel-preset-expo", {
-            //             // modules: false
-            //         }]]
-            //     }
-            // })
         ],
         define: {
             DEV: modeAsString,

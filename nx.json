@@ -3,13 +3,19 @@
     "default": {
       "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build"]
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
       }
+    }
+  },
+  "generators": {
+    "@nx/js:library": {
+      "buildable": true
     }
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "executor": "@nx/js:tsc"
     },
     "dev": {
       "dependsOn": ["^build"]

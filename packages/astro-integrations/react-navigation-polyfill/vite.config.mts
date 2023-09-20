@@ -9,7 +9,7 @@ export default defineConfig({
             fileName: 'index',
             formats: ['es', 'cjs']
         },
-        // minify: 'terser',
+        minify: 'terser',
         // watch: {},
         rollupOptions: {},
     },
