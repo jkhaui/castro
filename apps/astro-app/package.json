@@ -2,6 +2,17 @@
   "name": "@castro/astro-app",
   "version": "0.0.1",
   "private": true,
+  "keywords": [
+    "astro",
+    "react",
+    "react-native",
+    "react-native-web",
+    "capacitor",
+    "ionic",
+    "pwa",
+    "web-native",
+    "cross-platform"
+  ],
   "scripts": {
     "dev": "astro dev",
     "start": "astro start",
