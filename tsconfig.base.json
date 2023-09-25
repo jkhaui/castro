@@ -1,14 +1,34 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
+  "compileOnSave": false,
   "compilerOptions": {
     "declaration": true,
+    "resolveJsonModule": true,
     "emitDeclarationOnly": true,
-    "strict": true,
+    "importHelpers": true,
+    "strict": false,
+    "newLine": "lf",
     "moduleResolution": "Node16",
     "target": "ES2022",
     "module": "Node16",
+    "allowJs": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "verbatimModuleSyntax": false
-  }
+    "verbatimModuleSyntax": false,
+    "paths": {
+      "@castro/astro-app": ["./apps/astro-app/src"],
+      "@castro/react-navigation-polyfill": ["./packages/astro-integrations-internal/react-navigation-polyfill/src"],
+      "@castro/dev-logger": ["./packages/astro-integrations-internal/dev-logger/src"],
+      "@castro/react-native-web-polyfill": ["./packages/astro-integrations-internal/react-native-web-polyfill/src"],
+      "@castro/ui-components": ["./packages/ui-components/src"]
+    }
+  },
+  "exclude": [
+    "**/node_modules",
+    "**/.*/",
+    "dist",
+    "**/*.stories.tsx",
+    "**/*.stories.mdx",
+    ".storybook/**"
+  ]
 }

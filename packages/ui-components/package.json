@@ -4,15 +4,14 @@
   "sideEffects": false,
   "source": "src/index.mts",
   "types": "dist/index.d.ts",
-  "main": "dist/index.cjs",
+  "main": "dist/index.js",
   "module": "dist/index.js",
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": "./src/index.mts"
     }
   },
   "files": [
@@ -25,24 +24,38 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-
+    "framer-motion": "^10.16.4",
+    "notistack": "^3.0.1",
+    "react-loading-skeleton": "^3.3.1",
+    "react-virtuoso": "^4.6.0",
+    "swiper": "^10.3.0"
   },
   "peerDependencies": {
+    "@react-navigation/native": "next",
     "astro": "*",
-    "react": "*"
+    "konsta": "^3.1.0",
+    "postcss": "^8.4.30",
+    "react": "*",
+    "react-native": "npm:react-native-web-lite",
+    "tailwindcss": "^3.3.3"
   },
   "devDependencies": {
-    "react": "*",
+    "@react-navigation/native": "next",
+    "@storybook/addon-actions": "^7.4.5",
+    "@storybook/addon-docs": "^7.4.5",
+    "@storybook/addon-essentials": "^7.4.5",
+    "@storybook/react": "^7.4.5",
+    "@vitejs/plugin-react-swc": "^3.4.0",
     "astro": "*",
+    "konsta": "^3.1.0",
+    "react": "*",
+    "react-native": "npm:react-native-web-lite",
     "vite": "latest",
     "vitest": "*"
-  },
-  "engines": {
-    "node": ">=18.14.1"
   },
   "publishConfig": {
     "access": "public"

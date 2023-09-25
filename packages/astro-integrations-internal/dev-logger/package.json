@@ -1,0 +1,47 @@
+{
+  "name": "@castro/dev-logger",
+  "version": "0.0.1",
+  "sideEffects": false,
+  "source": "src/index.mts",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./src/index.mts"
+    }
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "keywords": [
+    "astro-integration",
+    "react"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "peerDependencies": {
+    "astro": "*",
+    "react": "*"
+  },
+  "devDependencies": {
+    "asset-require-hook": "^1.2.0",
+    "astro": "*",
+    "react": "*",
+    "vite": "latest",
+    "vitest": "*"
+  },
+  "engines": {
+    "node": ">=18.14.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,3 +1,4 @@
+import tsconfigPaths from "vite-tsconfig-paths";
 import {defineConfig} from "astro/config";
 import vercel from "@astrojs/vercel/serverless";
 import react from "@astrojs/react";
@@ -9,9 +10,8 @@ import prefetch from "@astrojs/prefetch";
 import compress from "astro-compress";
 import type {ManifestOptions} from "vite-plugin-pwa"
 import {VitePWA} from "vite-plugin-pwa";
-import babelPlugin from "vite-plugin-babel";
-import {babel} from "@rollup/plugin-babel";
 import reactNavigationPolyfill from "@castro/react-navigation-polyfill";
+import devLogger from "@castro/dev-logger";
 
 const development = process.env.NODE_ENV === "development";
 const modeAsString = JSON.stringify(development);
@@ -30,11 +30,6 @@ const extensions = [
     ".json",
     ".mjs"
 ];
-
-const babelTransformAssetsConfig = {
-    extensions: ["png"],
-    name: "[name].[ext]?[sha512:hash:base64:7]"
-};
 
 const manifest: Partial<ManifestOptions> = {
     name: "Castro",
@@ -70,7 +65,7 @@ export default defineConfig({
     output: 'server',
     adapter: vercel({
         edgeMiddleware: true,
-        functionPerRoute: true,
+        functionPerRoute: false,
         webAnalytics: {
             enabled: true
         },
@@ -80,7 +75,7 @@ export default defineConfig({
     }),
     integrations: [
         react({
-            experimentalReactChildren: true
+            // experimentalReactChildren: true
         }),
         tailwind(),
         svelte({
@@ -93,13 +88,14 @@ export default defineConfig({
             throttle: 4
         }),
         reactNavigationPolyfill(),
+        devLogger()
     ],
     vite: {
         resolve: {
             extensions: extensions,
-            // preserveSymlinks: true,
         },
         plugins: [
+            tsconfigPaths(),
             VitePWA({
                 registerType: "autoUpdate",
                 manifest,
@@ -110,17 +106,14 @@ export default defineConfig({
                     // This removes an errant console.log message from showing up.
                     navigateFallback: null
                 }
-            }),
-            // We were so close to completely avoiding direct babel transpilation :(
-            // But this one plugin is still needed in 2023 otherwise Node chokes
-            // trying to SSR an image required by the transitive dependency
-            // @react-navigation/elements
-            babelPlugin({
-                babelConfig: {
-                    plugins: [["transform-assets", babelTransformAssetsConfig]]
-                }
             })
         ],
+        ssr: {
+            noExternal: [
+                // Ships as a cjs package so must add here to stop build from breaking
+                "@ionic/pwa-elements"
+            ]
+        },
         define: {
             DEV: modeAsString,
             "process.env.NODE_ENV": modeAsString,
@@ -134,16 +127,26 @@ export default defineConfig({
             "global.window.__DEV__": modeAsString
         },
         build: {
-            rollupOptions: {
-                plugins: [
-                    // Vite uses esbuild for dev and rollup for prod builds. Therefore, we need to also include a babel
-                    // plugin wih the transform assets plugin in rollup's config, otherwise the build will succeed but
-                    // silently fail when invoked as Node can't parse a base64 image.
-                    babel({
-                        plugins: [["transform-assets", babelTransformAssetsConfig]]
-                    })
-                ]
-            }
+            minify: "terser",
+            // terserOptions: {
+            //     mangle: {
+            //         properties: {
+            //             // This is definitely not safe for prod usage, use more sophisticated
+            //             // heuristics for safely mangling prod builds
+            //             regex: /^_/,
+            //         }
+            //     }
+            // },
+            // TODO: this is potentially a workaround but still doesn't seem to fix the prod error caused by
+            // the back-icon asset from @react-navigation/stack > @react-navigation/elements.
+            // Leaving it here for now because if we can get it to work, then the custom .pnpmfile.cjs can be
+            // removed.
+            // rollupOptions: {
+            //     plugins: [
+            //         modify({
+            //             find: /back-icon(-mask)?\.png\?[\w\d]*/gi,
+            //             replace: ''
+            //         }),
         },
         optimizeDeps: {
             esbuildOptions: {

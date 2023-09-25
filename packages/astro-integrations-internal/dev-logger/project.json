@@ -1,0 +1,64 @@
+{
+  "name": "@castro/dev-logger",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/astro-integrations/dev-logger/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "type-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "./packages/astro-integrations/dev-logger",
+        "commands": [
+          {
+            "command": "tsc --project tsconfig.json --noEmit"
+          }
+        ]
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "./packages/astro-integrations/dev-logger",
+        "commands": [
+          {
+            "command": "vite build --emptyOutDir"
+          }
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "packages/astro-integrations/dev-logger/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "stylelint": {
+      "executor": "nx-stylelint:lint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "packages/astro-integrations/dev-logger/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "./packages/astro-integrations/dev-logger",
+        "commands": [
+          {
+            "command": "vitest run --config ./vitest.config.ts --coverage --passWithNoTests"
+          }
+        ]
+      }
+    }
+  }
+}

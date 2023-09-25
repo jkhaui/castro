@@ -7,9 +7,18 @@
       }
     }
   },
+  "extends": "nx/presets/core.json",
+  "workspaceLayout": {
+    "appsDir": "apps",
+    "libsDir": "packages"
+  },
   "generators": {
     "@nx/js:library": {
       "buildable": true
+    },
+    "@nx/react": {
+      "component": {},
+      "library": {}
     }
   },
   "targetDefaults": {
@@ -28,5 +37,6 @@
       ]
     },
     "test": {}
-  }
+  },
+  "$schema": "./node_modules/nx/schemas/nx-schema.json"
 }

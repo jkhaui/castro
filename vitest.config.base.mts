@@ -29,8 +29,9 @@ export default defineConfig({
         include: testFiles,
         exclude: [
             '**/node_modules/**',
-            '**/dist/**',
+            '**/hack/**',
             '**/.astro/**',
+            '**/dist/**',
             '**/.{idea,git,cache,output,temp}/**',
         ],
         // deps: {

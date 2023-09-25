@@ -1,12 +1,12 @@
 {
-  "name": "castro-nx-pnpm-monorepo",
+  "name": "@castro/root",
   "version": "0.0.1",
   "scripts": {
     "nx": "nx",
-    "build": "nx run-many -t build --exclude=@castro/castro-nx-pnpm-monorepo",
+    "build": "nx run-many -t build --exclude=@castro/root",
     "build:packages": "nx run-many -t build --projects=packages/**",
-    "build:pnpm": "pnpm --filter @castro/packages build && pnpm --filter=!@castro/castro-nx-pnpm-monorepo -r --parallel build",
-    "dev": "pnpm build:packages && pnpm --filter @castro/astro-app dev",
+    "build:pnpm": "pnpm --filter @castro/packages build && pnpm --filter=!@castro/root -r --parallel build",
+    "dev": "pnpm --filter @castro/astro-app dev",
     "dev:all": "pnpm -r --parallel dev",
     "test": "nx run-many --target=test --all",
     "test:types": "pnpm -r exec tsc --noEmit",
@@ -32,6 +32,8 @@
     "@nxext/capacitor": "latest",
     "@nxtensions/astro": "latest",
     "@types/node": "latest",
+    "@types/react": "^18.2.22",
+    "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
     "create-ts-index": "latest",
@@ -51,6 +53,7 @@
     "typescript": "latest",
     "vite": "latest",
     "vite-plugin-dts": "latest",
+    "vite-tsconfig-paths": "^4.2.1",
     "vitest": "latest"
   },
   "resolutions": {
@@ -61,6 +64,10 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
+  },
+  "engines": {
+    "node": "20.x",
+    "pnpm": "8.x"
   },
   "nx": {
     "targets": {

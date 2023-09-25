@@ -1,0 +1,64 @@
+{
+  "name": "@castro/react-native",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/astro-integrations/react-native/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "type-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "./packages/astro-integrations/react-native",
+        "commands": [
+          {
+            "command": "tsc --project tsconfig.json --noEmit"
+          }
+        ]
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "./packages/astro-integrations/react-native",
+        "commands": [
+          {
+            "command": "vite build --emptyOutDir"
+          }
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "packages/astro-integrations/react-native/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "stylelint": {
+      "executor": "nx-stylelint:lint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "packages/astro-integrations/react-native/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "./packages/astro-integrations/react-native",
+        "commands": [
+          {
+            "command": "vitest run --config ./vitest.config.ts --coverage --passWithNoTests"
+          }
+        ]
+      }
+    }
+  }
+}

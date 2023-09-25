@@ -1,23 +1,43 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
+    "module": "node16",
+    "lib": ["DOM", "ESNext"],
+    "moduleResolution": "node16",
     "isolatedModules": true,
     "types": [
       "astro/client"
     ],
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
+      "@/*": ["./src/*", "./dist/*", ""],
+      "components/*": ["src/components/*"],
       "@/components/react/*": ["src/components/react/*"],
       "@/components/react": ["src/components/react/index.ts"],
       "@/components/svelte/*": ["src/components/svelte/*"],
-      "@/components/svelte": ["src/components/svelte/index.ts"]
-
+      "@/components/svelte": ["src/components/svelte/index.ts"],
+      "@castro/ui-components": ["../../packages/ui-components/index"],
+      "@castro/ui-components/*": ["../../packages/ui-components/*"]
     },
     "allowSyntheticDefaultImports": true
-  }
+  },
+  "references": [
+    {
+      "path": "../../packages/astro-integrations-internal/react-navigation-polyfill",
+      "name": "@castro/react-navigation-polyfill"
+    },
+    {
+      "path": "../../packages/astro-integrations-internal/react-native-web-polyfill",
+      "name": "@castro/react-native-web-polyfill"
+    },
+    {
+      "path": "../../packages/astro-integrations-internal/dev-logger",
+      "name": "@castro/dev-logger"
+    },
+    {
+      "path": "../../packages/ui-components",
+      "name": "@castro/ui-components"
+    }
+  ]
 }

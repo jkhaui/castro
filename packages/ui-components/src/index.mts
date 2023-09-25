@@ -1,12 +1,4 @@
-import type { AstroIntegration } from "astro";
+// create-index
 
-export default function (): AstroIntegration {
-    return {
-        name: '@castro/mock',
-        hooks: {
-            'astro:config:setup': ({ injectScript }) => {
-                // no-op
-            }
-        }
-    }
-}
+export * from "./base/index.mjs";
+export * from "./icons/index.mjs";

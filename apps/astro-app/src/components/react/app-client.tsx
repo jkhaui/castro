@@ -1,17 +1,12 @@
 import * as React from "react";
-import {DarkTheme, NavigationContainer, useLinkProps, useNavigation} from "@react-navigation/native";
-import {App, Block, BlockTitle, Button, Navbar, Preloader} from "konsta/react";
+import {DarkTheme, NavigationContainer} from "@react-navigation/native";
+import {App, Preloader} from "konsta/react";
 import {createStackNavigator} from "@react-navigation/stack";
-import {View} from "@/components/react/base";
+import {AppRoutes} from "../../utils/enums";
+import {defineCustomElements} from "@ionic/pwa-elements/loader";
+import {ArticleScreenAsync, FeedScreenAsync, HomeScreen, UserScreenAsync} from "./home-stack-screens/index.mjs";
 
-export enum AppRoutes {
-    HOME = 'Home',
-    ARTICLE = 'Article',
-    USER = 'User',
-    FEED = 'Feed',
-}
-
-const Stack = createStackNavigator()
+const Stack = createStackNavigator();
 
 const linking = {
     config: {
@@ -23,21 +18,8 @@ const linking = {
             [AppRoutes.ARTICLE]: AppRoutes.ARTICLE,
             [AppRoutes.FEED]: AppRoutes.FEED
         }
-        // screens: {
-        //     initialRouteName: AppRoutes.HOME,
-        //     [AppRoutes.HOME]: {
-        //         path: '',
-        //         initialRouteName: AppRoutes.FEED,
-        //         screens: {
-        //             [AppRoutes.USER]: AppRoutes.USER,
-        //             [AppRoutes.ARTICLE]: AppRoutes.ARTICLE,
-        //             [AppRoutes.FEED]: AppRoutes.FEED
-        //         }
-        //     }
-        // }
     }
 }
-
 
 const state = {
     routes: [
@@ -47,81 +29,39 @@ const state = {
     ]
 }
 
-const LinkButton = ({to, action, children, ...restButtonProps}) => {
-    const {onPress, ...props} = useLinkProps({to, action})
-
-    const navigation = useNavigation();
-
-    return (
-        <Button
-            {...props}
-            {...restButtonProps}
-            onClick={() => navigation.push(to.screen)}
-            clear
-            colors={{
-                activeBgIos: '',
-                activeBgMaterial: ''
-            }}
-            touchRipple={false}
-            rounded
-        >
-            {children}
-        </Button>
-    )
-}
-
-
-function FeedScreen({navigation}) {
-    return (
-        <View>
-            <Navbar className={'absolute top-0'} title={document?.title} />
-            <BlockTitle>Settings</BlockTitle>
-            <Block>
-                <LinkButton to={{screen: AppRoutes.HOME}}>Go to Home</LinkButton>
-            </Block>
-        </View>
-    )
-}
-
-function ArticleScreen({navigation}) {
-    return (
-        <View>
-            <Navbar className={'absolute top-0'} title={document?.title} />
-            <BlockTitle>Article</BlockTitle>
-            <Block>
-                <LinkButton to={{screen: AppRoutes.USER}}>Go to User</LinkButton>
-            </Block>
-        </View>
-    )
-}
-
-function UserScreen({navigation}) {
-    return (
-        <View>
-            <Navbar className={'absolute top-0'} title={document?.title} />
-            <BlockTitle>User</BlockTitle>
-            <Block>
-                <LinkButton to={{screen: AppRoutes.FEED}}>Go to Feed</LinkButton>
-            </Block>
-        </View>
-    )
-}
-
-function HomeScreen({navigation}) {
-    return (
-        <View>
-            <BlockTitle>Home</BlockTitle>
-            <Block>
-                <LinkButton to={{screen: AppRoutes.ARTICLE}}>Go to Article</LinkButton>
-            </Block>
-        </View>
-    )
-}
-
 export const AppClient = ({...appProps}) => {
+
+    function resetReactNavigationContexts() {
+        // https://github.com/expo/router/discussions/588
+        // https://github.com/react-navigation/react-navigation/blob/9fe34b445fcb86e5666f61e144007d7540f014fa/packages/elements/src/getNamedContext.tsx#LL3C1-L4C1
+
+        // React Navigation is storing providers in a global, this is fine for the first static render
+        // but subsequent static renders of Stack or Tabs will cause React to throw a warning. To prevent this warning, we'll reset the globals before rendering.
+        const contexts = "__react_navigation__elements_contexts";
+        // @ts-expect-error: global
+        global[contexts] = new Map<string, React.Context<any>>();
+    }
+
+    resetReactNavigationContexts();
+
+    React.useEffect(() => {
+        defineCustomElements(window).then().catch();
+    }, []);
+
+    // const [navState, setNavState] = useSessionStorageState('CASTRO_NAV_STATE', {
+    //     defaultValue: null
+    // })
+
     return (
         <App {...appProps}>
-            <React.Suspense fallback={<Preloader/>}>
+            <React.Suspense fallback={
+                <div
+                    className={'bg-transparent flex flex-col flex-1 justify-center items-center'}
+                >
+                    <Preloader/>
+                </div>
+            }
+            >
                 <NavigationContainer
                     theme={{
                         ...DarkTheme,
@@ -130,12 +70,19 @@ export const AppClient = ({...appProps}) => {
                             background: 'transparent'
                         }
                     }}
+                    // initialState={navState}
+                    // onStateChange={(state) => {
+                    //     console.log(state, 'NAV_STATE');
+                    //
+                    //     setNavState(state);
+                    // }}
                     linking={linking}
                 >
                     <Stack.Navigator
                         initialRouteName={AppRoutes.HOME}
                         screenOptions={{
                             headerShown: false,
+                            headerBackImage: () => null
                         }}
                     >
                         <Stack.Screen
@@ -150,21 +97,21 @@ export const AppClient = ({...appProps}) => {
                                 title: AppRoutes.ARTICLE
                             }}
                             name={AppRoutes.ARTICLE}
-                            component={ArticleScreen}
+                            component={ArticleScreenAsync}
                         />
                         <Stack.Screen
                             options={{
                                 title: AppRoutes.USER
                             }}
                             name={AppRoutes.USER}
-                            component={UserScreen}
+                            component={UserScreenAsync}
                         />
                         <Stack.Screen
                             options={{
                                 title: AppRoutes.FEED
                             }}
                             name={AppRoutes.FEED}
-                            component={FeedScreen}
+                            component={FeedScreenAsync}
                         />
                     </Stack.Navigator>
                 </NavigationContainer>

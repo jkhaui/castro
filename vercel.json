@@ -1,5 +1,5 @@
 {
   "framework": "astro",
-  "buildCommand": "npx nx build @castro/react-navigation-polyfill && npx nx vercel-build @castro/astro-app",
+  "buildCommand": "npx nx build @castro/ui-components && npx nx vercel-build @castro/astro-app",
   "installCommand": "pnpm i"
 }

@@ -1,18 +1,17 @@
 {
-  "name": "@castro/react-navigation-polyfill",
+  "name": "@castro/react-native-web-polyfill",
   "version": "0.0.1",
   "sideEffects": false,
   "source": "src/index.mts",
   "types": "dist/index.d.ts",
-  "main": "dist/index.cjs",
+  "main": "dist/index.js",
   "module": "dist/index.js",
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": "./src/index.mts"
     }
   },
   "files": [

@@ -1,10 +1,25 @@
 ---
 import "../../scripts/polyfills";
+import {ViewTransitions} from "astro:transitions";
 import {AppClient} from "../components/react/app-client";
 import {ServerContainer} from "@react-navigation/native";
-import App from "../components/react/app-root";
+import AppRoot from "../components/react/app-root";
+import {AppRoutes} from "../utils/enums";
+import Tabbar from "../components/astro/tabbar.astro";
 
-const {isIos} = Astro.locals;
+const {locals, params, url, Redirect} = Astro;
+
+const {isIos} = locals;
+const {slug} = params;
+
+const pageSlugs = Object.values(AppRoutes);
+const pageExists = pageSlugs.some((pageSlug) => pageSlug === slug);
+
+if (!pageExists) {
+    // return Redirect("/404");
+}
+
+const currentPath = url.pathname;
 ---
 
 <!DOCTYPE html>
@@ -26,6 +41,7 @@ const {isIos} = Astro.locals;
             overflow: hidden;
         }
     </style>
+    <ViewTransitions/>
 </head>
 <body
         class="min-h-screen flex flex-col w-full z-0 bg-cover"
@@ -34,13 +50,16 @@ const {isIos} = Astro.locals;
 <span class={'fixed inset-0 bg-slate-900 opacity-50'}/>
 <aside></aside>
 <main>
-    <App
-            client:load
-            theme={isIos}
-            dark
-            safeAreas
-            className={'max-w-lg min-h-screen w-screen bg-transparent z-50 flex flex-col flex-1 mx-auto'}
-    />
+    <AppRoot>
+        <AppClient
+                client:load
+                theme={isIos}
+                dark
+                safeAreas
+                className={'max-w-lg min-h-screen w-screen bg-transparent flex flex-col flex-1 mx-auto'}
+        />
+    </AppRoot>
+    <Tabbar currentPath={currentPath}/>
 </main>
 </body>
 </html>

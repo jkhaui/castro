@@ -4,6 +4,6 @@ export default defineWorkspace([
     'apps/*',
     'packages/**',
     {
-        extends: './vitest.shared.ts'
+        extends: './vitest.config.base.mts'
     }
 ]);

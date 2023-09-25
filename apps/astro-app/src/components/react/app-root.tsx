@@ -2,7 +2,11 @@ import React from 'react'
 import {ServerContainer} from "@react-navigation/native";
 // import AppRegistry from "react-native";
 // import ReactDOMServer from 'react-dom/server';
-import {AppClient} from "@/components/react/app-client";
+// import {AppClient} from "./app-client";
+
+// TODO: investigate how to get `ServerContainer` working.
+// Probably needs to use a custom ReactDOM renderer as an Astro
+// integration
 
 // AppRegistry.registerComponent('AppClient', () => AppClient);
 // //
@@ -16,11 +20,7 @@ import {AppClient} from "@/components/react/app-client";
 //
 // console.log(html);
 
-const AppRoot = ({...appProps}) => {
-    return (
-        <AppClient {...appProps} />
-    );
-
+const AppRoot = ({children}) => {
     return (
         <ServerContainer
             location={{
@@ -28,7 +28,7 @@ const AppRoot = ({...appProps}) => {
                 search: ''
             }}
         >
-            <AppClient {...appProps} />
+            {children}
         </ServerContainer>
     )
 }
