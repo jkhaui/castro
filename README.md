@@ -1,6 +1,7 @@
 # Castro
 
-Experiment/PoC to create a "web-native"[1] mobile-first SSR framework with Astro and the following integrations:
+PoC (current status: experimental*) to create a "web-native"[1] mobile-first SSR framework with Astro and the following
+integrations:
 
 - React-Navigation for SPA/native-esque routing
 - React-Native/React-Native-Web (only used to integrate React-Navigation)
@@ -10,6 +11,9 @@ Experiment/PoC to create a "web-native"[1] mobile-first SSR framework with Astro
 Also acts as a decent starter template (IMHO) if you're looking for a modern monorepo setup geared 
 towards shipping multiple sub-packages for an OS library. Uses pnpm workspaces, Nx, Vite, Rollup, etc.
 
+*by experimental, I mean _highly_ experimental 😀. Expect many broken deployments and massive refactoring commits as I 
+figure this out.
+
 ## Setup
 
 1. `pnpm i` in project root (run `npm i -g pnpm` first if you don't have pnpm installed)
@@ -17,12 +21,39 @@ towards shipping multiple sub-packages for an OS library. Uses pnpm workspaces, 
 
 ## Roadmap/TODO
 
+- Implement file-based routing (similar to Expo Router, Next.js, etc.)
+- Rewrite mobile tabbar in Svelte to showcased framework interop/mixing-&-matching
 - Fix hydration errors
 - Lazy-load/code-split client-side routes
 - PoC: persistent navigation state across page transitions using `window.sessionStorage`
+- Add authentication
+- Add backend + service integrations
+- Implement Redis for isomorphic client/server sessions
+- Submit MVP to iOS/Google Play stores
 - Improve dynamic routing system
 - Extract modules into individual Astro plugin integrations
 - Dockerize app, add examples for Node.js and other provider adapters
+
+## Philosophy
+
+### First-Class Cross-Platform Development
+
+TODO
+
+### Sensible Isomorphic DX + UX
+
+#### Routing Strategy
+
+- **Initial lifecycle:** Browser URL request -> SSRd page -> Selective/partial client-side hydration
+- **Post-hydration navigation:** Defer to client-side routing, except when bottom tab links are clicked.
+
+#### User Sessions
+
+TODO
+
+### Framework Agnosticism
+
+Watch Evan You's talk at RenderATL [here](https://www.youtube.com/watch?v=YMwCPfABwHg).
 
 ## Credits
 
