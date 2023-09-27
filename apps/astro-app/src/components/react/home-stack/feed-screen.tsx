@@ -21,7 +21,8 @@ const FeedScreen = ({navigation}) => {
                 translucent
                 transparent
                 left={<NavbarBackLink
-                    className="ml-2"
+                    theme={'ios'}
+                    className="ml-0.5"
                     component={BackIcon}
                     onClick={() => navigation.dispatch(StackActions.pop())}
                 />}
