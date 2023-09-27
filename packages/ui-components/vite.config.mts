@@ -9,28 +9,24 @@ export default defineConfig({
     build: {
         lib: {
             ...baseConfig.build.lib,
-            entry: resolve(__dirname, 'src/index.mts'),
+            entry: resolve(__dirname, 'src/index.ts'),
         },
         minify: 'terser',
         terserOptions: {
             mangle: {
                 properties: {
                     regex: /^_/,
+                    reserved: ['h', 'Fragment']
                 }
             }
         },
         rollupOptions: {
             external: [
                 // ...baseConfig.rollupOptions.external,
-                ...Object.keys(pkg.dependencies ?? {}),
+                ...Object.keys(pkg.devDependencies ?? {}),
                 ...Object.keys(pkg.peerDependencies ?? {}),
                 'react/jsx-runtime',
             ],
-            output: {
-                globals: {
-                    react: 'React'
-                }
-            }
         },
     },
     plugins: [

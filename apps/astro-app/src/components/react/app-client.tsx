@@ -4,15 +4,15 @@ import {App, Preloader} from "konsta/react";
 import {createStackNavigator} from "@react-navigation/stack";
 import {AppRoutes} from "../../utils/enums";
 import {defineCustomElements} from "@ionic/pwa-elements/loader";
-import {ArticleScreenAsync, FeedScreenAsync, HomeScreen, UserScreenAsync} from "./home-stack-screens/index.mjs";
+import {ArticleScreenAsync, FeedScreenAsync, HomeScreen, UserScreenAsync} from "components/react/home-stack/index.mjs";
 
 const Stack = createStackNavigator();
 
 const linking = {
     config: {
-        initialRouteName: AppRoutes.HOME,
+        // initialRouteName: AppRoutes.HOME,
         screens: {
-            initialRouteName: AppRoutes.HOME,
+            // initialRouteName: AppRoutes.HOME,
             [AppRoutes.HOME]: '/',
             [AppRoutes.USER]: AppRoutes.USER,
             [AppRoutes.ARTICLE]: AppRoutes.ARTICLE,
@@ -79,7 +79,7 @@ export const AppClient = ({...appProps}) => {
                     linking={linking}
                 >
                     <Stack.Navigator
-                        initialRouteName={AppRoutes.HOME}
+                        // initialRouteName={AppRoutes.HOME}
                         screenOptions={{
                             headerShown: false,
                             headerBackImage: () => null
