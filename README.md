@@ -33,6 +33,8 @@ figure this out.
 - Improve dynamic routing system
 - Extract modules into individual Astro plugin integrations
 - Dockerize app, add examples for Node.js and other provider adapters
+- Augment/replace Astro HTML streaming with Vite SSR-compatible RSC payload implementation (e.g. https://dev.to/one-beyond/react-server-components-without-any-frameworks-5a8p, https://github.com/cyco130/vite-rsc)
+- Isomorphic client + RSC router: deeply integrate aforementioned RSC streaming with `react-navigation`
 
 ## Philosophy
 
