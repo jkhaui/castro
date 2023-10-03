@@ -35,6 +35,8 @@ figure this out.
 - Dockerize app, add examples for Node.js and other provider adapters
 - Augment/replace Astro HTML streaming with Vite SSR-compatible RSC payload implementation (e.g. https://dev.to/one-beyond/react-server-components-without-any-frameworks-5a8p, https://github.com/cyco130/vite-rsc)
 - Isomorphic client + RSC router: deeply integrate aforementioned RSC streaming with `react-navigation`
+- implement file-based routing + conventions (e.g. https://github.com/oedotme/generouted, https://github.com/hannoeru/vite-plugin-pages, Remix, Next, etc.)
+- Investigate validity of [Valtio](https://valtio.pmnd.rs/docs/introduction/getting-started) as framework-agnostic shared-state solution
 
 ## Philosophy
 
@@ -60,6 +62,15 @@ TODO
 ### Framework Agnosticism
 
 Watch Evan You's talk at RenderATL [here](https://www.youtube.com/watch?v=YMwCPfABwHg).
+
+#### Framework-Agnostic Proxy-Based State (Valtio)
+
+Astro recommends using [nanostores](https://docs.astro.build/en/core-concepts/sharing-state/) to share
+state amongst components rendered by different frameworks (e.g. React, Svelte). 
+
+However, [Valtio's](https://valtio.pmnd.rs/docs/guides/async) proxy-based solution appears better suited due to its first-class React Suspense support
+(it will throw throw a Promise when accessed within a Suspense boundary and can also integrate with "vanilla"
+JS via module scope). (NEEDS INVESTIGATION)
 
 ## Credits
 
