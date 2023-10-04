@@ -1,27 +1,89 @@
 ---
-import "../../scripts/polyfills";
+import {AppRoutes} from "@/utils/enums";
+import queryString from "query-string";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import {NavigationContainer, ServerContainer} from "@react-navigation/native";
+import {ClientStackRouter} from "./__internals/client-stack-router";
 import {ViewTransitions} from "astro:transitions";
-import {AppClient} from "../components/react/app-client";
-import {ServerContainer} from "@react-navigation/native";
-import AppRoot from "../components/react/app-root";
+import FixedBackground from "../layouts/FixedBackground.astro";
+import DesktopSideBar from "../layouts/DesktopSideBar.astro";
+import {App, Preloader} from "konsta/react";
+import MobileTabBar from "../layouts/MobileTabBar.astro";
+import {ArticleScreen, FeedScreen, UserScreen} from "./_home/index.mjs";
 import {AppRoutes} from "../utils/enums";
-import Tabbar from "../components/astro/tabbar.astro";
+import {CategoriesScreen, PopularScreen} from "./_discover/index.mjs";
+import {EditScreen, TimelineScreen} from "./_profile/index.mjs";
+import {capitalize} from "../utils/utils";
+import {StrictMode} from "react";
+import {createStackNavigator} from "@react-navigation/stack";
+import AppRoot from "../layouts/AppRoot.astro";
+import NavBar from "../layouts/NavBar.astro";
 
-const {locals, params, url, Redirect} = Astro;
-
-const {isIos} = locals;
+const {
+    props, locals, params, url: {
+        pathname: currentPath,
+        search
+    }, redirect
+} = Astro;
+const {isIos, isDarkMode} = locals;
 const {slug} = params;
-
 const pageSlugs = Object.values(AppRoutes);
 const pageExists = pageSlugs.some((pageSlug) => pageSlug === slug);
-
-if (!pageExists) {
-    // return Redirect("/404");
+// if (!pageExists && slug !== '404') {
+//     return redirect("/404");
+// }
+let pathname = currentPath === undefined ? "/" : currentPath;
+// pathname = currentPath.toLowerCase();
+pathname = slug?.toLowerCase() ?? '/'
+const stack = {
+    config: {
+        path: '',
+        initialRouteName: AppRoutes.HOME,
+        screens: {
+            [AppRoutes.USER]: AppRoutes.USER,
+            [AppRoutes.ARTICLE]: AppRoutes.ARTICLE,
+            [AppRoutes.NOT_FOUND]: '*'
+        }
+    }
 }
 
-const currentPath = url.pathname;
----
+function resetReactNavigationContexts() {
+    // https://github.com/expo/router/discussions/588
+    // https://github.com/react-navigation/react-navigation/blob/9fe34b445fcb86e5666f61e144007d7540f014fa/packages/elements/src/getNamedContext.tsx#LL3C1-L4C1
+    // React Navigation is storing providers in a global, this is fine for the first static render
+    // but subsequent static renders of Stack or Tabs will cause React to throw a warning. To prevent this warning, we'll reset the globals before rendering.
+    const contexts = "__react_navigation__elements_contexts";
+    // @ts-expect-error: global
+    global[contexts] = new Map<string, any>();
+}
 
+const screenToComponentMap = new Map();
+
+screenToComponentMap.set(AppRoutes.HOME, [{
+    name: AppRoutes.FEED,
+    component: FeedScreen
+}, {
+    name: AppRoutes.ARTICLE,
+    component: ArticleScreen
+}, {
+    name: AppRoutes.USER,
+    component: UserScreen
+}])
+screenToComponentMap.set(AppRoutes.DISCOVER, [{
+    name: AppRoutes.TRENDING,
+    component: PopularScreen
+}, {
+    name: AppRoutes.CATEGORIES,
+    component: CategoriesScreen
+}])
+screenToComponentMap.set(AppRoutes.PROFILE, [{
+    name: AppRoutes.TIMELINE,
+    component: TimelineScreen
+}, {
+    name: AppRoutes.EDIT,
+    component: EditScreen
+}])
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,13 +92,10 @@ const currentPath = url.pathname;
     <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
     <title>Castro</title>
     <style is:global>
-        /* https://necolas.github.io/react-native-web/docs/setup/ */
-        /* These styles make the body full-height */
         html, body {
-            height: 100%;
+            min-height: 100%;
         }
 
-        /* These styles disable body scrolling if you are using <ScrollView> */
         body {
             overflow: hidden;
         }
@@ -45,21 +104,20 @@ const currentPath = url.pathname;
 </head>
 <body
         class="min-h-screen flex flex-col w-full z-0 bg-cover"
-        style="background-image: url('/background.png')"
+        style="background-image: url('/backgroundv2.webp')"
 >
-<span class={'fixed inset-0 bg-slate-900 opacity-50'}/>
-<aside></aside>
-<main>
-    <AppRoot>
-        <AppClient
-                client:load
-                theme={isIos}
-                dark
-                safeAreas
-                className={'max-w-lg min-h-screen w-screen bg-transparent flex flex-col flex-1 mx-auto'}
-        />
-    </AppRoot>
-    <Tabbar currentPath={currentPath}/>
-</main>
+<FixedBackground/>
+<DesktopSideBar/>
+<NavBar/>
+<App
+        component="main"
+        theme={isIos ? 'ios' : 'material'}
+        dark={isDarkMode}
+        safeArea={true}
+        className={'max-w-lg min-h-screen w-screen bg-transparent flex flex-col flex-1 mx-auto'}
+>
+    <ClientStackRouter client:only="react" location={{pathname, search}}/>
+    <MobileTabBar pathname={pathname}/>
+</App>
 </body>
 </html>

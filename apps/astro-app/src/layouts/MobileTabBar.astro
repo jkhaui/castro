@@ -1,0 +1,13 @@
+---
+import {Tabbar} from "../components/react/tabbar";
+
+const {
+    locals: {
+        isIos,
+        isDarkMode
+    },
+    props: {pathname}
+} = Astro;
+---
+
+<Tabbar pathname={pathname} theme={isIos ? 'ios' : 'material'} isDarkMode={isDarkMode}/>

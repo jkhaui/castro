@@ -1,0 +1,57 @@
+{
+  "name": "@castro/core",
+  "version": "0.0.1",
+  "sideEffects": false,
+  "source": "src/index.mts",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./src/index.mts"
+    }
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "keywords": [
+    "react"
+  ],
+  "scripts": {
+    "dev": "node src/index.js",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "node dist/index.js"
+  },
+  "peerDependencies": {
+    "@react-navigation/native": "next",
+    "react": "*",
+    "react-native": "npm:react-native-web-lite"
+  },
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.23.0",
+    "@react-navigation/native": "next",
+    "@storybook/addon-actions": "^7.4.5",
+    "@storybook/addon-docs": "^7.4.5",
+    "@storybook/addon-essentials": "^7.4.5",
+    "@storybook/react": "^7.4.5",
+    "@vitejs/plugin-react-swc": "^3.4.0",
+    "astro": "*",
+    "konsta": "^3.1.0",
+    "react": "*",
+    "react-native": "npm:react-native-web-lite",
+    "ts-node": "^10.9.1",
+    "vite": "latest",
+    "vitest": "*"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "immer": "^10.0.2"
+  }
+}
