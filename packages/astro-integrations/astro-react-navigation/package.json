@@ -1,6 +1,6 @@
 {
   "name": "astro-react-navigation",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Hijack your Astro MPA with React Navigation's native-like routing",
   "sideEffects": false,
   "source": "src/index.mts",

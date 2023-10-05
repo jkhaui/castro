@@ -15,14 +15,17 @@ Part of a long-term experiment to create a universal next-gen router with the fo
 ### 1. Installation
 
 Create a [new Astro project](https://docs.astro.build/en/tutorial/1-setup/2/) or cd into an existing project. Ensure the
-[Astro React plugin](https://www.npmjs.com/package/@astrojs/react) is installed, and then run the following command (see
+[Astro React plugin](https://www.npmjs.com/package/@astrojs/react) is installed, and then run the following commands (see
 note on alternate package managers below if not using pnpm):
 
-`pnpm add astro-react-navigation @react-navigation/native@next @react-navigation/stack@next
+- `pnpm add astro-react-navigation @react-navigation/native@next @react-navigation/stack@next
 react-native@npm:react-native-web-lite react-native-screens
 react-native-safe-area-context@git+https://github.com/jkhaui/react-native-safe-area-context-lite.git`
+- `pnpm add -D babel-preset-expo`
 
-Add the following to your `astro.config` file:
+
+
+Then add the following to your `astro.config` file:
 
 ```
 import react from "@astrojs/react";
