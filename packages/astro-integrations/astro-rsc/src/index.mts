@@ -20,7 +20,7 @@ const extensions = [
 
 export default function reactNavigationIntegration(): AstroIntegration {
     return {
-        name: "@castro/isomorphic-devtools",
+        name: "@castro/astro-rsc",
         hooks: {
             "astro:config:setup": ({command, updateConfig, injectScript}) => {
                 if (command === "dev") {
@@ -33,7 +33,7 @@ export default function reactNavigationIntegration(): AstroIntegration {
                 updateConfig({
                     vite: {
                         resolve: {
-                            dedupe: ["@react-navigation/native", "@react-navigation/stack"],
+                            dedupe: ["@react-navigation/native"],
                             extensions: extensions,
                         },
                         define: {

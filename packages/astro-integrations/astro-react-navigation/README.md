@@ -19,11 +19,8 @@ Create a [new Astro project](https://docs.astro.build/en/tutorial/1-setup/2/) or
 note on alternate package managers below if not using pnpm):
 
 - `pnpm add astro-react-navigation @react-navigation/native@next @react-navigation/stack@next
-react-native@npm:react-native-web-lite react-native-screens
-react-native-safe-area-context@git+https://github.com/jkhaui/react-native-safe-area-context-lite.git`
+react-native@npm:react-native-web-lite react-native-safe-area-context@npm:react-native-safe-area-context-web-vendored`
 - `pnpm add -D babel-preset-expo`
-
-
 
 Then add the following to your `astro.config` file:
 
@@ -76,6 +73,7 @@ module.exports = {
 import * as React from 'react';
 import {DarkTheme, NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 function Home({navigation}) {
     return (
@@ -120,10 +118,19 @@ function MyStack() {
 }
 
 export default function App() {
+    const INITIAL_METRICS = {
+         frame: {x: 0, y: 0, width: 0, height: 0},
+         insets: {top: 0, left: 0, right: 0, bottom: 0},
+    };
+
     return (
-        <NavigationContainer theme={DarkTheme}>
-            <MyStack/>
-        </NavigationContainer>
+        <React.Fragment>
+            <SafeAreaProvider initialMetrics={INITIAL_METRICS}>
+                <NavigationContainer theme={DarkTheme}>
+                    <MyStack/>
+                </NavigationContainer>
+            </SafeAreaProvider>
+        </React.Fragment>
     );
 }
 ```

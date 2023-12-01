@@ -17,10 +17,12 @@
     "verbatimModuleSyntax": false,
     "paths": {
       "@castro/astro-app": ["./apps/astro-app/src"],
-      "@castro/react-navigation-polyfill": ["./packages/astro-integrations-internal/react-navigation-polyfill/src"],
-      "@castro/dev-logger": ["./packages/astro-integrations-internal/dev-logger/src"],
-      "@castro/react-native-web-polyfill": ["./packages/astro-integrations-internal/react-native-web-polyfill/src"],
-      "@castro/ui-components": ["./packages/ui-components/src"]
+      "@castro/isomorphic-devtools": ["./packages/isomorphic-devtools/src"],
+      "@castro/ui-components": ["./packages/ui-components/src/index.mts"],
+      "@castro/ui-components/*": ["./packages/ui-components/*"],
+      "@castro/router": ["./packages/router/src/index.mts"],
+      "@castro/router/*": ["./packages/router/*"],
+      "@castro/core": ["./packages/core/src"]
     }
   },
   "exclude": [

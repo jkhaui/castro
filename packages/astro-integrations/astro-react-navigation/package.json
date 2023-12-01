@@ -1,6 +1,6 @@
 {
   "name": "astro-react-navigation",
-  "version": "0.0.3",
+  "version": "0.0.6",
   "description": "Hijack your Astro MPA with React Navigation's native-like routing",
   "sideEffects": false,
   "source": "src/index.mts",
@@ -44,13 +44,11 @@
     "@react-navigation/stack": "*",
     "astro": "*",
     "react": "*",
-    "react-native": "npm:react-native-web-lite",
-    "react-native-safe-area-context": "git+https://github.com/jkhaui/react-native-safe-area-context-lite.git",
-    "react-native-screens": "*"
+    "react-native": "npm:react-native-web-lite"
   },
   "devDependencies": {
     "vite": "latest",
-    "vitest": "*"
+    "vitest": "^0.34.6"
   },
   "engines": {
     "node": ">=18.14.1"
@@ -65,5 +63,6 @@
   },
   "bugs": {
     "url": "https://github.com/jkhaui/castro/issues"
-  }
+  },
+  "homepage": "https://github.com/jkhaui/castro/tree/main/packages/astro-integrations/astro-react-navigation#astro-react-navigation"
 }

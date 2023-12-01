@@ -1,0 +1,47 @@
+{
+  "name": "@castro/router",
+  "version": "0.0.1",
+  "sideEffects": false,
+  "source": "src/index.mts",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./src/index.mts"
+    }
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "keywords": [],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.0.2",
+    "framer-motion": "^10.16.9",
+    "nanoid": "^5.0.3",
+    "react-freeze": "^1.0.3",
+    "valtio": "^1.12.1"
+  },
+  "peerDependencies": {
+    "@react-navigation/native": "7.0.0-alpha.4",
+    "react": "*"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "react": "18.2.0",
+    "vite": "latest",
+    "vitest": "^0.34.6"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

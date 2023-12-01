@@ -28,30 +28,31 @@
     "start": "node dist/index.js"
   },
   "peerDependencies": {
-    "@react-navigation/native": "next",
+    "@react-navigation/native": "7.0.0-alpha.4",
     "react": "*",
     "react-native": "npm:react-native-web-lite"
   },
   "devDependencies": {
-    "@babel/preset-typescript": "^7.23.0",
-    "@react-navigation/native": "next",
-    "@storybook/addon-actions": "^7.4.5",
-    "@storybook/addon-docs": "^7.4.5",
-    "@storybook/addon-essentials": "^7.4.5",
-    "@storybook/react": "^7.4.5",
-    "@vitejs/plugin-react-swc": "^3.4.0",
-    "astro": "*",
-    "konsta": "^3.1.0",
-    "react": "*",
-    "react-native": "npm:react-native-web-lite",
+    "@babel/preset-typescript": "^7.23.3",
+    "@react-navigation/native": "7.0.0-alpha.4",
+    "@storybook/addon-actions": "^7.5.3",
+    "@storybook/addon-docs": "^7.5.3",
+    "@storybook/addon-essentials": "^7.5.3",
+    "@storybook/react": "^7.5.3",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "astro": "^3.5.5",
+    "konsta": "^3.1.2",
+    "react": "18.2.0",
+    "react-native": "npm:react-native-web-lite@^1.76.0",
     "ts-node": "^10.9.1",
     "vite": "latest",
-    "vitest": "*"
+    "vitest": "^0.34.6"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "immer": "^10.0.2"
+    "@danielhaim/titlecaser": "^1.2.56",
+    "immer": "^10.0.3"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@castro/isomorphic-devtools",
+  "name": "@castro/astro-rsc",
   "version": "0.0.1",
   "sideEffects": false,
   "source": "src/index.mts",
@@ -30,21 +30,17 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
-  "dependencies": {
-
-  },
   "peerDependencies": {
     "@react-navigation/native": "*",
-    "@react-navigation/stack": "*",
     "astro": "*",
     "react": "*",
     "react-native": "*"
   },
   "devDependencies": {
-    "react": "*",
-    "astro": "*",
+    "astro": "^3.5.5",
+    "react": "18.2.0",
     "vite": "latest",
-    "vitest": "*"
+    "vitest": "^0.34.6"
   },
   "engines": {
     "node": ">=18.14.1"

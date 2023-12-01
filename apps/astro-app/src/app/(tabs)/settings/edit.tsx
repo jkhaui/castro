@@ -1,0 +1,28 @@
+import {Link} from "@castro/ui-components";
+import {Button, Card} from "konsta/react";
+import {QualifiedScreenNames} from "@/utils/index.mjs";
+import * as React from "react";
+import {Share} from "@capacitor/share";
+
+const EditScreen = ({navigation}) => {
+    const handleClick = async () => {
+        await Share.share({
+            title: 'Article XYZ',
+            text: 'Some body text content',
+            url: 'https://my-domain.blah',
+            dialogTitle: 'Share'
+        })
+    }
+
+    return (
+        <Card
+            footer={
+                <Button onClick={handleClick} rounded>Share</Button>
+            }
+        >
+            <Link to={{screen: QualifiedScreenNames.SETTINGS}}>Back to all settings</Link>
+        </Card>
+    )
+}
+
+export default EditScreen;

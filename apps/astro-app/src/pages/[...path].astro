@@ -1,0 +1,113 @@
+---
+// import querystring from "node:querystring";
+import {CastroRoot} from "../app/__internals/castro-root";
+import AppShell from "@/layouts/AppShell.astro";
+import {MobileTabbar, ModalWithFab} from "@castro/ui-components";
+import {
+    QualifiedScreenNames,
+    formatDocumentTitle,
+    ANCHOR_TOP_EL_ID,
+    APP_ROUTE_MAP,
+    buildQualifiedStaticPaths,
+    APP_ROOT_PATH,
+    buildStaticHref,
+    PlatformTheme,
+    tabBasePathSegments,
+    tabLabels
+} from "@/utils/index.mjs";
+import ViewTransitionsProxyScript from "../scripts/ViewTransitionsProxyScript.astro";
+import {useUserAgent} from "astro-useragent";
+import PrefetchTabRoutesScript from "../scripts/PrefetchTabRoutesScript.astro";
+
+const uaString = Astro.request.headers.get("user-agent");
+const {isDesktop, isIos} = useUserAgent(uaString);
+const theme = isIos ? PlatformTheme.IOS : PlatformTheme.MATERIAL;
+const isDarkMode = true;
+
+const enablePwaElements = true;
+const enableViewTransitions = true;
+const device = {theme}
+
+const {
+    props,
+    params: {path},
+    url: {
+        // pathname: currentPath,
+        search
+    },
+    redirect
+} = Astro;
+
+const qualifiedPaths = [...buildQualifiedStaticPaths(APP_ROUTE_MAP, tabBasePathSegments), "offline"];
+
+const segments = path?.split("/");
+
+const initialTabPath = (segments && segments[0]) ?? APP_ROOT_PATH;
+
+const initialActiveSegment = segments?.length && segments[segments.length - 1];
+
+const pathOrUndefined = path ?? APP_ROOT_PATH;
+
+if (!qualifiedPaths?.includes(pathOrUndefined)) {
+    return redirect(`${APP_ROOT_PATH}${QualifiedScreenNames.NOT_FOUND}`)
+}
+const searchParams = {}
+// const searchParams = querystring.parse(search) ?? {}
+
+const location = {
+    initialTabPath,
+    initialActiveSegment,
+    tabBasePathSegments,
+    searchParams
+}
+
+const tabPathAsTitle = initialTabPath === APP_ROOT_PATH ? QualifiedScreenNames.HOME : initialTabPath
+const documentTitle = formatDocumentTitle(initialActiveSegment, tabPathAsTitle);
+---
+
+<AppShell
+        anchorTopElId={ANCHOR_TOP_EL_ID}
+        appRootPath={APP_ROOT_PATH}
+        isDesktop={isDesktop}
+        enableViewTransitions={enableViewTransitions}
+        enablePwaElements={enablePwaElements}
+        theme={theme}
+        isDarkMode={isDarkMode}
+        location={location}
+        tabBasePathSegments={tabBasePathSegments}
+        initialActiveSegment={initialActiveSegment}
+        tabLabels={tabLabels}
+        documentTitle={documentTitle}
+>
+    <ViewTransitionsProxyScript slot="headSlot" hasCustomBasePath={false} appRootPath={APP_ROOT_PATH}/>
+    <PrefetchTabRoutesScript slot="headSlot"/>
+    <CastroRoot
+            transition:persist
+            client:load
+            location={location}
+            tabLabels={tabLabels}
+            pathnameOptions={{
+                notFoundScreenName: QualifiedScreenNames.NOT_FOUND
+            }}
+            appShellSafeAreas={false}
+            appShellClassName="bg-transparent flex flex-col flex-1 mx-auto"
+            appShellComponent="div"
+            appRootPath={APP_ROOT_PATH}
+            isDarkMode={isDarkMode}
+            theme={theme}
+            isDesktop={isDesktop}
+    />
+    {!isDesktop && (
+            <MobileTabbar
+                    transition:persist
+                    buildStaticHref={buildStaticHref}
+                    anchorElId={ANCHOR_TOP_EL_ID}
+                    appRootPath={APP_ROOT_PATH}
+                    tabLabels={tabLabels}
+                    location={location}
+                    isDarkMode={isDarkMode}
+                    theme={theme}
+                    labels={isIos}
+            />
+    )}
+</AppShell>

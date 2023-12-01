@@ -1,5 +1,10 @@
 dist
 
+.nx
+
+# mock service-worker dir for developing pwa functionality
+**/dev-dist
+
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 # and https://github.com/github/gitignore for examples
 

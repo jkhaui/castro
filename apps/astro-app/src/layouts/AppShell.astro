@@ -1,0 +1,107 @@
+---
+import {Head} from "astro-capo";
+import {Schema} from "astro-seo-schema";
+import BackgroundOverlay from "@/components/BackgroundOverlay.astro";
+import {pwaInfo} from "virtual:pwa-info";
+import "@fontsource/poppins";
+import {ViewTransitions} from "astro:transitions";
+import DesktopLeftPanelMini from "@/components/DesktopLeftPanelMini.astro";
+import {App} from "konsta/react";
+import {SEO} from "astro-seo";
+import {PlatformTheme} from "@/utils/index.mjs";
+import DesktopRightPanel from "@/components/DesktopRightPanel.astro";
+import {META_DESCRIPTION} from "../utils/index.mjs";
+import PwaMetaTags from "./PwaMetaTags.astro";
+import PwaGlobalStyles from "./PwaGlobalStyles.astro";
+
+const {
+    lang = "en",
+    documentTitle,
+    anchorTopElId,
+    tabLabels,
+    location,
+    appRootPath,
+    isDesktop,
+    isDarkMode,
+    theme,
+    enableViewTransitions = true,
+    // Until the view transitions API is widely supported by all major browsers,
+    // highly recommended to use "none" for the default animation to avoid unusual
+    // UX bugs.
+    // This also best mimics native mobile behaviour of fluidly switching tabs with
+    // no cross-fade animation or full-page reload.
+    viewTransitionsAnimation = "none",
+    bodyClass = "flex flex-col overflow-hidden w-full z-0 bg-cover bg-fixed",
+    initialActiveSegment,
+    tabBasePathSegments
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html
+        transition:animate={viewTransitionsAnimation}
+        lang={lang}
+        class={`${
+            isDarkMode
+                ? "dark"
+                : "light"
+        } standalone:select-none w-screen`}
+>
+<Head>
+    <!-- https://gist.github.com/hal0gen/5852bd9db240c477f20c -->
+    <PwaMetaTags/>
+    <PwaGlobalStyles/>
+    <SEO
+            charset="UTF-8"
+            title={documentTitle}
+            description={META_DESCRIPTION}
+            twitter={{
+                creator: "@castro"
+            }}
+    />
+    {enableViewTransitions && (
+            <ViewTransitions/>
+    )}
+    {pwaInfo && (
+            <Fragment set:html={pwaInfo?.webManifest?.linkTag}/>
+    )}
+    <slot name="headSlot"/>
+    <script src="/src/scripts/pwa.ts"></script>
+    <Schema
+            item={{
+                "@context": "https://schema.org",
+                "@type": "Person",
+                name: "Grace Brewster",
+                alternateName: "Grace Brewster Murray Hopper",
+                alumniOf: {
+                    "@type": "CollegeOrUniversity",
+                    name: ["Yale University", "Vassar College"],
+                },
+                knowsAbout: ["Compilers", "Computer Science"],
+            }}
+    />
+</Head>
+<body
+        id={anchorTopElId}
+        class={bodyClass}
+        style="background-image: url('/images/background-v1.webp')"
+>
+<BackgroundOverlay/>
+{isDesktop && (
+        <DesktopLeftPanelMini
+                appRootPath={appRootPath}
+                tabLabels={tabLabels}
+                location={location}
+                dark={isDarkMode}
+        />
+)}
+<main id="app-root" class="safe-areas">
+    <slot/>
+</main>
+{Astro.slots.has("desktopRightSlot") && (
+        <DesktopRightPanel dark={isDarkMode}>
+            <slot name="desktopRightSlot"/>
+        </DesktopRightPanel>
+)}
+</body>
+</html>

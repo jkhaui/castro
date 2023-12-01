@@ -20,40 +20,19 @@ const extensions = [
 
 interface ReactNavigationOptions {
     injectGlobalStyles?: boolean;
-    resetGlobalElementsContext?: boolean;
 }
 
 export default function reactNavigation({
-                                            injectGlobalStyles = true,
-                                            resetGlobalElementsContext = true
+                                            injectGlobalStyles = true
                                         }: ReactNavigationOptions = {}): AstroIntegration {
     return {
         name: "astro-react-navigation",
         hooks: {
             "astro:config:setup": ({command, updateConfig, injectScript}) => {
-                if (command === "dev") {
-                    injectScript("before-hydration", `
-                        window.global = window;
-                        globalThis.REACT_NAVIGATION_DEVTOOLS = new WeakMap();
-                    `);
-                }
-
-                if (resetGlobalElementsContext) {
-                    // https://github.com/expo/router/discussions/588
-                    // https://github.com/react-navigation/react-navigation/blob/9fe34b445fcb86e5666f61e144007d7540f014fa/packages/elements/src/getNamedContext.tsx#LL3C1-L4C1
-                    // React Navigation is storing providers in a global, this is fine for the first static render
-                    // but subsequent static renders of Stack or Tabs will cause React to throw a warning. To prevent this warning, we'll reset the globals before rendering.
-
-                    // Script has been modified to remove TypeScript annotations + mangle variable names as it's pure
-                    // JS code injected into the HTML document.
-                    injectScript("before-hydration", `
-                        function _r() {
-                            const _c = "__react_navigation__elements_contexts";
-                            global[_c] = new Map();
-                        }
-                        _r();
-                    `)
-                }
+                injectScript("before-hydration", `
+                    window.global = window;
+                    globalThis.REACT_NAVIGATION_DEVTOOLS = new WeakMap();
+                `);
 
                 if (injectGlobalStyles) {
                     injectScript("page-ssr", `import "astro-react-navigation/global-styles.css";`);
@@ -62,7 +41,7 @@ export default function reactNavigation({
                 updateConfig({
                     vite: {
                         resolve: {
-                            dedupe: ["@react-navigation/native", "@react-navigation/stack"],
+                            dedupe: ["@react-navigation/native"],
                             extensions: extensions,
                         },
                         define: {

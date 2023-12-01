@@ -7,37 +7,45 @@
     "moduleResolution": "node16",
     "isolatedModules": true,
     "types": [
-      "astro/client"
+      "astro/client",
+      "vite-plugin-pwa/client"
     ],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*", "./dist/*", ""],
-      "components/*": ["src/components/*"],
+      "@/app/*": ["src/app/*"],
+      "@/components/*": ["src/components/*"],
+      "@/layouts/*": ["src/layouts/*"],
+      "@/scripts/*": ["src/scripts/*"],
+      "@/utils/*": ["src/utils/*"],
       "@/components/react/*": ["src/components/react/*"],
-      "@/components/react": ["src/components/react/index.ts"],
+      "@/components/react": ["src/components/react/index.mts"],
       "@/components/svelte/*": ["src/components/svelte/*"],
-      "@/components/svelte": ["src/components/svelte/index.ts"],
-      "@castro/ui-components": ["../../packages/ui-components/index"],
-      "@castro/ui-components/*": ["../../packages/ui-components/*"]
+      "@/components/svelte": ["src/components/svelte/index.mts"],
+      "@castro/ui-components": ["../../packages/ui-components/src/index.mts"],
+      "@castro/ui-components/*": ["../../packages/ui-components/*"],
+      "@castro/router": ["../../packages/router/src/index.mts"],
+      "@castro/router/*": ["../../packages/router/*"]
     },
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react"
   },
   "references": [
     {
-      "path": "../../packages/astro-integrations-internal/react-navigation-polyfill",
-      "name": "@castro/react-navigation-polyfill"
+      "path": "../../packages/astro-integrations/astro-react-navigation",
+      "name": "@castro/astro-react-navigation"
     },
     {
-      "path": "../../packages/astro-integrations-internal/react-native-web-polyfill",
-      "name": "@castro/react-native-web-polyfill"
-    },
-    {
-      "path": "../../packages/astro-integrations-internal/dev-logger",
-      "name": "@castro/dev-logger"
+      "path": "../../packages/castro-isomorphic-devtools",
+      "name": "@castro/isomorphic-devtools"
     },
     {
       "path": "../../packages/ui-components",
       "name": "@castro/ui-components"
+    },
+    {
+      "path": "../../packages/router",
+      "name": "@castro/router"
     }
   ]
 }

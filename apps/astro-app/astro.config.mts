@@ -1,71 +1,46 @@
+// import {readFileSync} from "node:fs";
+// import {join} from "node:path";
 import tsconfigPaths from "vite-tsconfig-paths";
 import {defineConfig} from "astro/config";
 import vercel from "@astrojs/vercel/serverless";
 import react from "@astrojs/react";
 import tailwind from "@astrojs/tailwind";
 import svelte from "@astrojs/svelte";
-import partytown from "@astrojs/partytown";
 import sitemap from "@astrojs/sitemap";
-import prefetch from "@astrojs/prefetch";
+import AstroPWA from '@vite-pwa/astro'
 import compress from "astro-compress";
-import type {ManifestOptions} from "vite-plugin-pwa"
-import {VitePWA} from "vite-plugin-pwa";
-import reactNavigationPolyfill from "@castro/react-navigation-polyfill";
-import devLogger from "@castro/dev-logger";
+import million from "million/compiler";
+import reactNavigation from "astro-react-navigation";
+import isomorphicDevTools from "@castro/isomorphic-devtools";
+import {
+    APP_ROOT_PATH,
+    APP_ROUTE_MAP,
+    BASE_URL,
+    buildQualifiedStaticPaths,
+    tabBasePathSegments
+} from "./src/utils/index.mjs";
+import {manifest} from "./src/app/app-metadata.js";
+// const {version} = JSON.parse(
+//     readFileSync(join(process.cwd(), "package.json"), "utf-8")
+// )
 
-const development = process.env.NODE_ENV === "development";
-const modeAsString = JSON.stringify(development);
+const isDevMode = import.meta.env.DEV;
 
-const extensions = [
-    ".png",
-    ".web.tsx",
-    ".tsx",
-    ".web.ts",
-    ".ts",
-    ".web.jsx",
-    ".jsx",
-    ".web.js",
-    ".js",
-    ".css",
-    ".json",
-    ".mjs"
-];
+const DEV_BASE_URL = "http://localhost:4321";
 
-const manifest: Partial<ManifestOptions> = {
-    name: "Castro",
-    short_name: "Castro",
-    description: "An experiment using Astro & Capacitor for cross-platform app deployment",
-    theme_color: "#080c15",
-    background_color: "#080c15",
-    display: "standalone",
-    orientation: "portrait",
-    start_url: "/",
-    scope: "/",
-    // icons: [
-    //     {
-    //         src: "/favicons/favicon-192x192.png",
-    //         sizes: "192x192",
-    //         type: "image/png"
-    //     },
-    //     {
-    //         src: "/favicons/favicon-512x512.png",
-    //         sizes: "512x512",
-    //         type: "image/png"
-    //     },
-    //     {
-    //         src: "/favicons/favicon-512x512.png",
-    //         sizes: "512x512",
-    //         type: "image/png",
-    //         purpose: "any maskable"
-    //     }
-    // ]
-};
+const staticPaths = buildQualifiedStaticPaths(APP_ROUTE_MAP, tabBasePathSegments).map((path: string) => {
+    if (path === APP_ROOT_PATH) {
+        return isDevMode ? DEV_BASE_URL : BASE_URL
+    }
+    return `${isDevMode ? DEV_BASE_URL : BASE_URL}/${path}`
+})
 
 export default defineConfig({
-    output: 'server',
+    output: "server",
+    site: BASE_URL,
     adapter: vercel({
         edgeMiddleware: true,
-        functionPerRoute: false,
+        functionPerRoute: true,
         webAnalytics: {
             enabled: true
         },
@@ -73,90 +48,80 @@ export default defineConfig({
             enabled: true
         }
     }),
+    prefetch: {
+        defaultStrategy: "tap",
+        prefetchAll: false
+    },
     integrations: [
-        react({
-            // experimentalReactChildren: true
-        }),
+        react(),
         tailwind(),
         svelte({
             prebundleSvelteLibraries: false
         }),
-        partytown(),
-        sitemap(),
-        compress(),
-        prefetch({
-            throttle: 4
+        sitemap({
+            customPages: staticPaths
         }),
-        reactNavigationPolyfill(),
-        devLogger()
+        compress(),
+        reactNavigation({
+            // resetGlobalElementsContext: false,
+            injectGlobalStyles: false
+        }),
+        isomorphicDevTools(),
+        AstroPWA({
+            manifest,
+            registerType: "autoUpdate",
+            base: APP_ROOT_PATH,
+            scope: APP_ROOT_PATH,
+            includeAssets: ["favicon.ico", "**/*.webp", "**/*.png", "**/*.svg", "**/*.woff2"],
+            workbox: {
+                skipWaiting: true,
+                clientsClaim: true,
+                // https://github.com/vite-pwa/vite-plugin-pwa/issues/120#issuecomment-1202579983
+                globPatterns: ['**/*.{js,css,woff2}'],
+                navigateFallback: null,
+                runtimeCaching: [{
+                    // urlPattern: ({url, sameOrigin}) => sameOrigin && staticPaths.includes(url),
+                    urlPattern: ({url}) => true,
+                    // urlPattern: ({url, sameOrigin}) => url === APP_ROOT_PATH || buildQualifiedStaticPaths(APP_ROUTE_MAP, tabBasePathSegments).map((path) => `/${path}`).includes(url.pathname),
+                    handler: "StaleWhileRevalidate",
+                    options: {
+                        cacheName: "castro-route-cache",
+                        cacheableResponse: {
+                            statuses: [0, 200]
+                        }
+                    }
+                }, {
+                    handler: "NetworkOnly",
+                    urlPattern: ({url}) => url.pathname.startsWith("/api"),
+                    method: "POST",
+                    options: {
+                        backgroundSync: {
+                            name: "analytics-queue",
+                            options: {
+                                maxRetentionTime: 24 * 60
+                            }
+                        }
+                    }
+                }]
+            },
+            devOptions: {
+                enabled: false,
+                navigateFallbackAllowlist: [/^\//],
+            }
+        })
     ],
     vite: {
-        resolve: {
-            extensions: extensions,
-        },
         plugins: [
-            tsconfigPaths(),
-            VitePWA({
-                registerType: "autoUpdate",
-                manifest,
-                workbox: {
-                    globDirectory: 'dist',
-                    globPatterns: ['**/*.{js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}'],
-                    // Don't fallback on document based (e.g. `/some-page`) requests
-                    // This removes an errant console.log message from showing up.
-                    navigateFallback: null
-                }
-            })
-        ],
-        ssr: {
-            noExternal: [
-                // Ships as a cjs package so must add here to stop build from breaking
-                "@ionic/pwa-elements"
-            ]
-        },
-        define: {
-            DEV: modeAsString,
-            "process.env.NODE_ENV": modeAsString,
-            ...(development && {
-                // When dep optimisation is enabled for prod builds, rollup's commonjs resolver will throw an error
-                // if `__DEV__` exists as a global var; however, it's necessary for react-navigation to work in dev mode.
-                __DEV__: modeAsString,
-                "global.REACT_NAVIGATION_DEVTOOLS": {},
-                "global.window.REACT_NAVIGATION_DEVTOOLS": {},
+            million.vite({
+                mode: "react",
+                server: true,
+                mute: true,
+                auto: true
             }),
-            "global.window.__DEV__": modeAsString
-        },
+            tsconfigPaths(),
+        ],
         build: {
             minify: "terser",
-            // terserOptions: {
-            //     mangle: {
-            //         properties: {
-            //             // This is definitely not safe for prod usage, use more sophisticated
-            //             // heuristics for safely mangling prod builds
-            //             regex: /^_/,
-            //         }
-            //     }
-            // },
-            // TODO: this is potentially a workaround but still doesn't seem to fix the prod error caused by
-            // the back-icon asset from @react-navigation/stack > @react-navigation/elements.
-            // Leaving it here for now because if we can get it to work, then the custom .pnpmfile.cjs can be
-            // removed.
-            // rollupOptions: {
-            //     plugins: [
-            //         modify({
-            //             find: /back-icon(-mask)?\.png\?[\w\d]*/gi,
-            //             replace: ''
-            //         }),
-        },
-        optimizeDeps: {
-            esbuildOptions: {
-                resolveExtensions: extensions,
-                // https://github.com/vitejs/vite-plugin-react/issues/192#issuecomment-1627384670
-                jsx: "automatic",
-                loader: {
-                    ".js": "jsx"
-                }
-            },
         },
     }
 });

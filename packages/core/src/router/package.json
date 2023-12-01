@@ -1,0 +1,56 @@
+{
+  "name": "@castro/router",
+  "version": "0.0.1",
+  "description": "Hijack your Astro MPA with React Navigation's native-like routing",
+  "sideEffects": false,
+  "source": "src/index.mts",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./src/index.mts"
+    }
+  },
+  "license": "MIT",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "keywords": [
+    "astro-integration",
+    "astro-spa",
+    "react",
+    "react-native",
+    "react-native-web",
+    "react-native-web-lite",
+    "react-navigation",
+    "spa-router",
+    "stack-navigator",
+    "web-native"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "peerDependencies": {
+    "@react-navigation/native": "*",
+    "astro": "*",
+    "react": "*",
+    "react-native": "npm:react-native-web-lite"
+  },
+  "devDependencies": {
+    "vite": "latest",
+    "vitest": "^0.34.6"
+  },
+  "engines": {
+    "node": ">=18.14.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

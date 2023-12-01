@@ -1,0 +1,15 @@
+---
+import {DesktopNavControls} from "./react/desktop-nav-controls";
+import {buildStaticHref} from "../utils/index.mjs";
+import {StackingContext} from "@castro/ui-components";
+
+const {
+    props
+} = Astro;
+---
+
+<aside class={`fixed left-0 top-0 bottom-0 w-20 h-screen md:left-auto md:shrink-0 md:!opacity-100 md:!block bg-gray-300 dark:bg-slate-900 hairline-r ${StackingContext.ELEVATION_LOWER}`}>
+    <nav>
+        <DesktopNavControls buildStaticHref={buildStaticHref} miniVariant={true} {...props}/>
+    </nav>
+</aside>

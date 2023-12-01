@@ -1,0 +1,8 @@
+---
+import AppShell from "../layouts/AppShell.astro";
+import {ErrorBoundaryView} from "@castro/ui-components";
+---
+
+<AppShell title="Oops. Something went wrong :(" isDarkMode={true}>
+    <ErrorBoundaryView primaryAction="location/reset"/>
+</AppShell>

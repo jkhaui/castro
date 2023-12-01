@@ -1,0 +1,17 @@
+<script>
+    import {prefetch} from "astro:prefetch";
+    import {APP_ROOT_PATH, QualifiedScreenNames, tabBasePathSegments} from "../utils/index.mjs";
+
+    [
+        ...tabBasePathSegments,
+        QualifiedScreenNames.OFFLINE,
+        QualifiedScreenNames.NOT_FOUND
+    ].forEach((path) => {
+        prefetch(path === APP_ROOT_PATH ? APP_ROOT_PATH : `/${path}`, {
+            // Prefetch our `offline` & error screens with the lower-priority `link` strategy
+            // as it's not as critical to initial UX
+            with: path !== (QualifiedScreenNames.OFFLINE && QualifiedScreenNames.NOT_FOUND) ? "fetch" : "link",
+            ignoreSlowConnection: true
+        })
+    })
+</script>

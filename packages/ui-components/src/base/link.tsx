@@ -1,27 +1,46 @@
 import * as React from "react";
-import {useLinkProps, useNavigation} from "@react-navigation/native";
+import type {Screen} from "../../../router/src/index.mjs";
+// https://github.com/vitejs/vite/issues/5370
+import {useAccessibleLink} from "../../../router/src/index.mjs";
+import type {NavigationAction} from "@react-navigation/native";
+import {useOnline} from "../hooks/index.mjs";
 
-export const Link = ({children, className = '', to, action, ...restLinkProps}: any) => {
-    const {onPress, ...props} = useLinkProps({to, action})
+export interface LinkProps extends React.HTMLAttributes<HTMLAnchorElement> {
+    underline?: boolean;
+    to: Screen;
+    action?: NavigationAction;
+    params?: any;
+    concurrent?: boolean;
+    prefetch?: boolean;
+}
 
-    const navigation = useNavigation();
+export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(({
+                                                                        children,
+                                                                        className = "text-link",
+                                                                        underline = false,
+                                                                        to,
+                                                                        action,
+                                                                        params,
+                                                                        concurrent = true,
+                                                                        prefetch = true,
+                                                                        ...restLinkProps
+                                                                    }, ref) => {
+    const {isPending, handlePress} = useAccessibleLink({to, action, params, concurrent})
 
-    const handleClick = React.useCallback((e) => {
-        e.preventDefault()
-        e.stopPropagation()
-
-        navigation.push(to.screen);
-    }, [])
+    const isOnline = useOnline();
 
     return (
         <a
+            ref={ref}
             {...restLinkProps}
-            {...props}
-            className={className}
-            href={to.screen}
-            onClick={handleClick}
+            className={`${className} ${isPending ? 'opacity-50' : 'opacity-100'} ${underline ? 'underline' : ''}`}
+            draggable="false"
+            onClick={handlePress}
+            // className={`${className} ${isPending ? 'opacity-50' : 'opacity-100'} ${isPressed ? 'scale-105' : 'scale-100'} ${underline ? 'underline' : ''}`}
+            href={isOnline ? to.screen : "offline"}
+            data-astro-prefetch={prefetch || undefined}
         >
             {children}
         </a>
     )
-}
+})

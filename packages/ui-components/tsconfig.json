@@ -2,8 +2,26 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "resolveJsonModule": true,
-    "types": ["vite/client"],
+    "types": [
+      "vite/client"
+    ],
+    "jsx": "react",
+    "composite": true,
+    "incremental": true,
+    "baseUrl": "./src"
   },
+  "paths": {
+    "@castro/ui-components": ["../src/index.mts"],
+    "@castro/ui-components/*": ["../*"],
+    "@castro/router": ["../../router/src/index.mts"],
+    "@castro/router/*": ["../../router/*"]
+  },
+  "references": [
+    {
+      "path": "../router",
+      "name": "@castro/router"
+    }
+  ],
   "include": [
     ".eslintrc.*",
     "**/*.ts",

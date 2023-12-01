@@ -1,1 +1,1 @@
-# @castro/isomorphic-devtools
+# @castro/astro-rsc

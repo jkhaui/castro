@@ -1,1 +1,0 @@
-# @castro/react-navigation-polyfill

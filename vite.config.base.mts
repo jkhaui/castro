@@ -1,10 +1,9 @@
 // common shared config
 /// <reference types="vite/client" />
 
-import {defineConfig} from 'vite';
 import dts from 'vite-plugin-dts';
 
-export default defineConfig({
+const baseConfig = {
     build: {
         // @ts-ignore
         lib: {
@@ -17,4 +16,6 @@ export default defineConfig({
             insertTypesEntry: true,
         }),
     ],
-});
+}
+
+export default baseConfig

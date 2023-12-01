@@ -1,0 +1,22 @@
+---
+const {
+    props: {
+        // hasCustomBasePath,
+        rootPath
+    }
+} = Astro
+
+// NOTE: avoid adding an `id` to the script tag. This breaks the automatic
+// dep optimization by vite and silently fails.
+---
+
+<script>
+    import {RouterActions} from "../../../../packages/router/src/index.mjs";
+    import {APP_ROOT_PATH} from "../utils/index.mjs";
+
+    document.addEventListener('astro:after-swap', () => {
+        const basePathSegment = window.location.pathname?.split("/")[1]
+
+        RouterActions.setInitialRouteName(basePathSegment || APP_ROOT_PATH)
+    }, {once: false});
+</script>

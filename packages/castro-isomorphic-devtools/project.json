@@ -1,0 +1,64 @@
+{
+  "name": "@castro/isomorphic-devtools",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/castro-isomorphic-devtools/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "type-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "./packages/castro-isomorphic-devtools",
+        "commands": [
+          {
+            "command": "tsc --project tsconfig.json --noEmit"
+          }
+        ]
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "./packages/castro-isomorphic-devtools",
+        "commands": [
+          {
+            "command": "vite build --emptyOutDir"
+          }
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "packages/castro-isomorphic-devtools/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "stylelint": {
+      "executor": "nx-stylelint:lint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "packages/castro-isomorphic-devtools/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "./packages/castro-isomorphic-devtools",
+        "commands": [
+          {
+            "command": "vitest run --config ./vitest.config.ts --coverage --passWithNoTests"
+          }
+        ]
+      }
+    }
+  }
+}

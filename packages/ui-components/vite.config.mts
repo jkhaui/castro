@@ -1,24 +1,14 @@
-import {resolve} from 'path';
-import {defineConfig} from 'vite';
+import {resolve} from 'node:path';
+import {mergeConfig} from 'vite';
+import tsconfigPaths from "vite-tsconfig-paths";
 import react from '@vitejs/plugin-react-swc';
 import pkg from './package.json';
 import baseConfig from '../../vite.config.base.mjs';
 
-export default defineConfig({
-    ...baseConfig,
+export default mergeConfig(baseConfig, {
     build: {
         lib: {
-            ...baseConfig.build.lib,
-            entry: resolve(__dirname, 'src/index.ts'),
-        },
-        minify: 'terser',
-        terserOptions: {
-            mangle: {
-                properties: {
-                    regex: /^_/,
-                    reserved: ['h', 'Fragment']
-                }
-            }
+            entry: resolve(__dirname, 'src/index.mts'),
         },
         rollupOptions: {
             external: [
@@ -30,7 +20,7 @@ export default defineConfig({
         },
     },
     plugins: [
-        ...baseConfig.plugins,
         react(),
+        tsconfigPaths(),
     ],
 });
